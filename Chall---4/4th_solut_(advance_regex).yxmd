@@ -1,0 +1,297 @@
+<?xml version="1.0"?>
+<AlteryxDocument yxmdVer="2022.3">
+  <Nodes>
+    <Node ToolID="1">
+      <GuiSettings Plugin="AlteryxBasePluginsGui.TextInput.TextInput">
+        <Position x="30" y="138" />
+      </GuiSettings>
+      <Properties>
+        <Configuration>
+          <NumRows value="17" />
+          <Fields>
+            <Field name="Field_1" />
+          </Fields>
+          <Data>
+            <r>
+              <c>He who sleeps on the floor will not fall off the bed.Robert Gronock16-APR-2005This is a valid record.</c>
+            </r>
+            <r>
+              <c>After all is said and done, more is said than doneAnonymous09-JAN-1856Oops! The RandomInt field is missing.  This record should be rejected into a bad file.</c>
+            </r>
+            <r>
+              <c>I want to see you shoot the way you shoutTeddy Roosevelt Nov 16, 1900This record is valid but the date is in MMMbDD,bYYYY format.</c>
+            </r>
+            <r>
+              <c>get someone else to do it.15-APR-1944This record is valid but has a carriage return in the middle of the quote.</c>
+            </r>
+            <r>
+              <c>Why do they call it rush hour when nothing moves?Mork27-JUN-70This record is valid but has only a two-year date.</c>
+            </r>
+            <r>
+              <c>I'm taking the Ryanair approach to it: subcontracting everythingMichael O'Leary23-MAY-2011This record is valid and has a single quote in the two text fields.</c>
+            </r>
+            <r>
+              <c>I Xeroxed a mirror.  Now I have an extra Xerox machine."Steven Wright30-JUN-06This record is valid but has a trailing double quote that should be part fo the text field.</c>
+            </r>
+            <r>
+              <c>Freidrich Engels01-AUG-08This record is missing the first field, the quote.  This record should be rejected in a bad file.</c>
+            </r>
+            <r>
+              <c>'He's so old his social security number is two digits.'Brian Morgan Jan 5 2000This record is valid but the quote is surrounded by single quotes, the date is an unconventional format and the integer has a fractional part.</c>
+            </r>
+            <r>
+              <c>"I was the best man at the wedding.So why is she marrying him?"Jerry Seinfeld09-July-2001This record is valid but has a carriage return in the quote and the month is fully specified in the date.</c>
+            </r>
+            <r>
+              <c>"When my wife was asked, "Do you take this man for richer or poorer..." she answered, "For richer!""Anonymous21-May-07This record is valid.</c>
+            </r>
+            <r>
+              <c>"These are the continuing voyagesTo boldly split infinitives"Gene Roddenberry16-SEP-69This record is valid but contains the record separator within quotes.</c>
+            </r>
+            <r>
+              <c>"The best cure for insomnia is to get a lot of sleep.W.C.Fields4-SEP-00The quote field has a beginning but not a trailing double quote.  This record could be rejected.</c>
+            </r>
+            <r>
+              <c>I don't even butter my bread; I consider that cooking.,Katherine Cebrian, 08-may-2003,This record uses commas instead of pipes as the field delimiter and can be rejected.</c>
+            </r>
+            <r>
+              <c>It matters not whether you win or lose; what mattes is whether I win or lose.Darrin Weinberg21-MAR-2005This is a valid record but the integer starts off with a zero, which shouldn't be confused for an octal number.</c>
+            </r>
+            <r>
+              <c>Smoking is one of the leading causes of statistics.Fletcher Knebel24-OCT-1989This record contains an invalid RandomInt.</c>
+            </r>
+            <r>
+              <c>I tried to think but nothing happened!"Curly"'11-AUG-1935'This is a valid record but the fields are sometimes contained in quotes.</c>
+            </r>
+          </Data>
+        </Configuration>
+        <Annotation DisplayMode="0">
+          <Name />
+          <DefaultAnnotationText />
+          <Left value="False" />
+        </Annotation>
+      </Properties>
+      <EngineSettings EngineDll="AlteryxBasePluginsEngine.dll" EngineDllEntryPoint="AlteryxTextInput" />
+    </Node>
+    <Node ToolID="2">
+      <GuiSettings Plugin="AlteryxBasePluginsGui.RegEx.RegEx">
+        <Position x="138" y="138" />
+      </GuiSettings>
+      <Properties>
+        <Configuration>
+          <Field>Field_1</Field>
+          <RegExExpression value=".*(\d{2}-[a-z]+-\d+)|.*(\d-[a-z]+-\d+)|.*([[:alpha:]][[:alpha:]][[:alpha:]]\s\d{2},\s\d{4})|.*([[:alpha:]][[:alpha:]][[:alpha:]]\s\d\s\d{4})" />
+          <CaseInsensitve value="True" />
+          <Method>ParseComplex</Method>
+          <Replace expression="">
+            <CopyUnmatched value="True" />
+          </Replace>
+          <ParseSimple>
+            <SplitToRows value="False" />
+            <RootName>Field_1</RootName>
+            <NumFields value="3" />
+            <ErrorHandling>Warn</ErrorHandling>
+          </ParseSimple>
+          <ParseComplex>
+            <Field field="RegExOut1" type="V_String" size="2147483647" />
+            <Field field="RegExOut2" type="V_String" size="2147483647" />
+            <Field field="RegExOut3" type="V_String" size="2147483647" />
+            <Field field="RegExOut4" type="V_String" size="2147483647" />
+          </ParseComplex>
+          <Match>
+            <Field>Field_1_Matched</Field>
+            <ErrorUnmatched value="False" />
+          </Match>
+        </Configuration>
+        <Annotation DisplayMode="0">
+          <Name />
+          <DefaultAnnotationText />
+          <Left value="False" />
+        </Annotation>
+      </Properties>
+      <EngineSettings EngineDll="AlteryxBasePluginsEngine.dll" EngineDllEntryPoint="AlteryxRegEx" />
+    </Node>
+    <Node ToolID="3">
+      <GuiSettings Plugin="AlteryxBasePluginsGui.Formula.Formula">
+        <Position x="246" y="138" />
+      </GuiSettings>
+      <Properties>
+        <Configuration>
+          <FormulaFields>
+            <FormulaField expression="IF IsEmpty([RegExOut1]) THEN [RegExOut2] ELSE [RegExOut1] ENDIF" field="RegExOut1" size="2147483647" type="V_String" />
+            <FormulaField expression="if isempty([RegExOut1]) then (trim(substring([RegExOut3],4,2))+&quot;-&quot;+ Left(uppercase([RegExOut3]),3)+&quot;-&quot;+&#xA;right([RegExOut3],4)) else [RegExOut1] endif" field="RegExOut1" size="2147483647" type="V_String" />
+            <FormulaField expression="if [RegExOut1]==&quot;--&quot; then (trim(substring([RegExOut4],4,2))+&quot;-&quot;+ Left(uppercase([RegExOut4]),3)+&quot;-&quot;+&#xA;right([RegExOut4],4)) else [RegExOut1] endif" field="RegExOut1" size="2147483647" type="V_String" />
+          </FormulaFields>
+        </Configuration>
+        <Annotation DisplayMode="0">
+          <Name />
+          <DefaultAnnotationText>RegExOut1 = IF IsEmpty([RegExOut1]) THEN [RegExOut2] ELSE [RegExOut1] ENDIF
+RegE...</DefaultAnnotationText>
+          <Left value="False" />
+        </Annotation>
+      </Properties>
+      <EngineSettings EngineDll="AlteryxBasePluginsEngine.dll" EngineDllEntryPoint="AlteryxFormula" />
+    </Node>
+    <Node ToolID="4">
+      <GuiSettings Plugin="AlteryxBasePluginsGui.TextToColumns.TextToColumns">
+        <Position x="366" y="138" />
+      </GuiSettings>
+      <Properties>
+        <Configuration>
+          <Field>RegExOut1</Field>
+          <ErrorHandling>Last</ErrorHandling>
+          <RootName>Date</RootName>
+          <Delimeters value="-" />
+          <NumFields value="3" />
+          <Flags value="0" />
+        </Configuration>
+        <Annotation DisplayMode="0">
+          <Name />
+          <DefaultAnnotationText />
+          <Left value="False" />
+        </Annotation>
+      </Properties>
+      <EngineSettings EngineDll="AlteryxBasePluginsEngine.dll" EngineDllEntryPoint="AlteryxTextToColumns" />
+    </Node>
+    <Node ToolID="5">
+      <GuiSettings Plugin="AlteryxBasePluginsGui.Formula.Formula">
+        <Position x="486" y="138" />
+      </GuiSettings>
+      <Properties>
+        <Configuration>
+          <FormulaFields>
+            <FormulaField expression="DateTimeParse(([Date1]+&quot;-&quot;+[Date2]+&quot;-&quot;+[Date3]),&quot;%d-%b-%Y&quot;)" field="DateTime_Out" size="1073741823" type="V_WString" />
+          </FormulaFields>
+        </Configuration>
+        <Annotation DisplayMode="0">
+          <Name />
+          <DefaultAnnotationText><![CDATA[DateTime_Out = DateTimeParse(([Date1]+"-"+[Date2]+"-"+[Date3]),"%d-%b-%Y")
+]]></DefaultAnnotationText>
+          <Left value="False" />
+        </Annotation>
+      </Properties>
+      <EngineSettings EngineDll="AlteryxBasePluginsEngine.dll" EngineDllEntryPoint="AlteryxFormula" />
+    </Node>
+    <Node ToolID="6">
+      <GuiSettings Plugin="AlteryxBasePluginsGui.AlteryxSelect.AlteryxSelect">
+        <Position x="606" y="138" />
+      </GuiSettings>
+      <Properties>
+        <Configuration>
+          <OrderChanged value="False" />
+          <CommaDecimal value="False" />
+          <SelectFields>
+            <SelectField field="Field_1" selected="True" />
+            <SelectField field="DateTime_Out" selected="True" />
+            <SelectField field="*Unknown" selected="False" />
+          </SelectFields>
+        </Configuration>
+        <Annotation DisplayMode="0">
+          <Name />
+          <DefaultAnnotationText />
+          <Left value="False" />
+        </Annotation>
+      </Properties>
+      <EngineSettings EngineDll="AlteryxBasePluginsEngine.dll" EngineDllEntryPoint="AlteryxSelect" />
+    </Node>
+    <Node ToolID="7">
+      <GuiSettings Plugin="AlteryxBasePluginsGui.BrowseV2.BrowseV2">
+        <Position x="762" y="138" />
+      </GuiSettings>
+      <Properties>
+        <Configuration>
+          <TempFile>C:\Users\Shivansh\AppData\Local\Temp\Engine_11032_07a83f7d7005194d917071098339eb5d_\Engine_11032_c5b361393f0cd849b638e0fdb6ff8c12~.yxdb</TempFile>
+          <TempFileDataProfiling />
+          <Layout>
+            <ViewMode>Single</ViewMode>
+            <ViewSize value="100" />
+            <View1>
+              <DefaultTab>Profile</DefaultTab>
+              <Hints>
+                <Table />
+              </Hints>
+            </View1>
+            <View2 />
+          </Layout>
+        </Configuration>
+        <Annotation DisplayMode="0">
+          <Name />
+          <DefaultAnnotationText />
+          <Left value="False" />
+        </Annotation>
+      </Properties>
+      <EngineSettings EngineDll="AlteryxBasePluginsEngine.dll" EngineDllEntryPoint="AlteryxBrowseV2" />
+    </Node>
+  </Nodes>
+  <Connections>
+    <Connection>
+      <Origin ToolID="1" Connection="Output" />
+      <Destination ToolID="2" Connection="Input" />
+    </Connection>
+    <Connection>
+      <Origin ToolID="2" Connection="Output" />
+      <Destination ToolID="3" Connection="Input" />
+    </Connection>
+    <Connection>
+      <Origin ToolID="3" Connection="Output" />
+      <Destination ToolID="4" Connection="Input" />
+    </Connection>
+    <Connection>
+      <Origin ToolID="4" Connection="Output" />
+      <Destination ToolID="5" Connection="Input" />
+    </Connection>
+    <Connection>
+      <Origin ToolID="5" Connection="Output" />
+      <Destination ToolID="6" Connection="Input" />
+    </Connection>
+    <Connection>
+      <Origin ToolID="6" Connection="Output" />
+      <Destination ToolID="7" Connection="Input" />
+    </Connection>
+  </Connections>
+  <Properties>
+    <Memory default="True" />
+    <GlobalRecordLimit value="0" />
+    <TempFiles default="True" />
+    <Annotation on="True" includeToolName="False" />
+    <ConvErrorLimit value="10" />
+    <ConvErrorLimit_Stop value="False" />
+    <CancelOnError value="False" />
+    <DisableBrowse value="False" />
+    <EnablePerformanceProfiling value="False" />
+    <RunWithE2 value="True" />
+    <PredictiveToolsCodePage value="1252" />
+    <DisableAllOutput value="False" />
+    <ShowAllMacroMessages value="False" />
+    <ShowConnectionStatusIsOn value="True" />
+    <ShowConnectionStatusOnlyWhenRunning value="True" />
+    <ZoomLevel value="0" />
+    <LayoutType>Horizontal</LayoutType>
+    <MetaInfo>
+      <NameIsFileName value="True" />
+      <Name>4th_solut_(advance_regex)</Name>
+      <Description />
+      <RootToolName />
+      <ToolVersion />
+      <ToolInDb value="False" />
+      <CategoryName />
+      <SearchTags />
+      <Author />
+      <Company />
+      <Copyright />
+      <DescriptionLink actual="" displayed="" />
+      <Example>
+        <Description />
+        <File />
+      </Example>
+      <WorkflowId value="ffb3edaa-0a73-487a-9d51-158aa0628c50" />
+      <Telemetry>
+        <PreviousWorkflowId value="db5f9ea0-fdfb-412f-b7f9-58658566cdb9" />
+        <OriginWorkflowId value="db5f9ea0-fdfb-412f-b7f9-58658566cdb9" />
+      </Telemetry>
+    </MetaInfo>
+    <Events>
+      <Enabled value="True" />
+    </Events>
+  </Properties>
+</AlteryxDocument>
